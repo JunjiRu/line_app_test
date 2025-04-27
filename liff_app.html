@@ -1,22 +1,43 @@
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-<script>
-  async function init() {
-    try {
-      await liff.init({ liffId: "2007324974-JAX6zdl4" });
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>LIFFテスト用</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2em; }
+    button { padding: 10px 20px; font-size: 1em; }
+    #message { margin-top: 20px; }
+  </style>
+</head>
+<body>
 
-      if (!liff.isInClient()) {
-        document.body.innerHTML = '<h1>このページはLINEアプリ内からのみアクセスできます。</h1>';
-        return;
+  <h1>LIFFアプリ テスト用画面</h1>
+  <p>ボタンを押すと LIFF 初期化と LINE 内判定が行われます。</p>
+
+  <button onclick="runLiff()">LIFF判定開始</button>
+  <div id="message"></div>
+
+  <script>
+    async function runLiff() {
+      const msg = document.getElementById("message");
+      msg.innerText = "LIFF初期化中...";
+
+      try {
+        await liff.init({ liffId: "2007324974-JAX6zdl4" });
+
+        if (!liff.isInClient()) {
+          msg.innerHTML = '<h2>このページはLINEアプリ内からのみアクセスできます。</h2>';
+          return;
+        }
+
+        const idToken = await liff.getIDToken();
+        msg.innerHTML = `<p>LINEアプリ内で表示されています<br>ID Token: <code>${idToken}</code></p>`;
+
+      } catch (e) {
+        msg.innerHTML = `<h2>LIFFの初期化に失敗しました</h2><pre>${e.message}</pre>`;
       }
-      const idToken = await liff.getIDToken();
-      console.log(idToken);
-
-    } catch (err) {
-      console.error("LIFF init failed", err);
-      document.body.innerHTML = '<h1>アクセスが制限されています。</h1>';
     }
-  }
-
-  window.onload = init;
-</script>
-liff app test
+  </script>
+</body>
+</html>
