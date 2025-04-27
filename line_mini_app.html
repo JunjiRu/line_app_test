@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>LINEミニアプリテスト用</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2em; }
+    button { padding: 10px 20px; font-size: 1em; }
+    #message { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>ミニアプリ テスト用画面</h1>
+  <p>ボタンを押すと ミニアプリ 初期化と LINE 内判定が行われます。</p>
+
+  <button onclick="runLiff()">ミニアプリ判定開始</button>
+  <div id="message"></div>
+
+  <script>
+    async function runLiff() {
+      const msg = document.getElementById("message");
+      msg.innerText = "ミニアプリ初期化中...";
+
+      try {
+        await liff.init({ liffId: "2007327551-lDdJyGEg" });
+
+        if (!liff.isInClient()) {
+          msg.innerHTML = '<h2>このページはLINEアプリ内からのみアクセスできます。</h2>';
+          return;
+        }
+
+        const idToken = await liff.getIDToken();
+        msg.innerHTML = `<p>LINEアプリ内で表示されています<br>ID Token: <code>${idToken}</code></p>`;
+
+      } catch (e) {
+        msg.innerHTML = `<h2>ミニアプリの初期化に失敗しました</h2><pre>${e.message}</pre>`;
+      }
+    }
+  </script>
+</body>
+</html>
