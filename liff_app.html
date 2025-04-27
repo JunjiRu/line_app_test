@@ -1,1 +1,22 @@
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+  async function init() {
+    try {
+      await liff.init({ liffId: "2007324974-JAX6zdl4" });
+
+      if (!liff.isInClient()) {
+        document.body.innerHTML = '<h1>このページはLINEアプリ内からのみアクセスできます。</h1>';
+        return;
+      }
+      const idToken = await liff.getIDToken();
+      console.log(idToken);
+
+    } catch (err) {
+      console.error("LIFF init failed", err);
+      document.body.innerHTML = '<h1>アクセスが制限されています。</h1>';
+    }
+  }
+
+  window.onload = init;
+</script>
 liff app test
